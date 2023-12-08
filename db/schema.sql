@@ -12,6 +12,7 @@ CREATE TABLE rolle (
   id INT PRIMARY KEY,
   title VARCHAR(30),
   salary DECIMAL,
+  
   dept_id INT
 );
 
