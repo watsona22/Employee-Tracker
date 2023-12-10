@@ -1,30 +1,71 @@
-// const inquirer = require('inquirer');
+const inquirer = require('inquirer');
 
-// async function askLogo() {
-//     try {
-//         const data = await inquirer.prompt([
-//             {
-//                 type: 'input',
-//                 name: 'text',
-//                 message: 'Enter no more than three characters for your logo',
-//                 validate: letterLength
-//             },
-//             {
-//                 type: 'list',
-//                 name: 'color1',
-//                 message: 'Which color would you prefer for the text?',
-//                 choices: ['white', 'black', 'green'],
-//             },
-//             {
-//                 type: 'list',
-//                 name: 'shape',
-//                 message: 'Would you like to choose a circle, triangle, or square?',
-//                 choices: ['circle', 'triangle', 'square'],
-//             },
-//             {
-//                 type: 'list',
-//                 name: 'color2',
-//                 message: 'Which color would you prefer for the shape?',
-//                 choices: ['orange', 'purple', 'teal'],
-//             },
-//         ]);
+//view dept name and ids
+switch (data.text) {
+    case 'View all departments':
+        viewDept(question);
+        const question = data.text
+        if (question === 'View all departments')
+            db.query(`SELECT * FROM employee_db`, (err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(result);
+            })
+        break;
+
+    case 'View all roles':
+        viewRole();
+        //job title, role id, 
+        //the department that role belongs to, 
+        //and the salary for that role
+        break;
+
+    case 'View all employees':
+        viewEmployee();
+        //employee data, including employee ids, 
+        //first names, last names, job titles, 
+        //departments, salaries, and managers
+        break;
+
+    case 'Add department':
+        addDept();
+        //prompted to enter the name of the department 
+        //and that department is added to the database
+        break;
+
+    case 'Add a role':
+        addRole();
+        //prompted to enter the name, salary, and department for the role 
+        //and that role is added to the database
+        break;
+
+    case 'Add an employee':
+        addEmployee();
+        //prompted to enter the employee’s first name, last name, 
+        //role, and manager, 
+        //and that employee is added to the database
+        break;
+
+    case 'Update an employee role':
+        addEmployeeRole();
+        //prompted to select an employee to update 
+        //and their new role 
+        //and this information is updated in the database
+        break;
+
+    default:
+        console.log('Invalid choice');
+}
+
+async function askLogo() {
+    try {
+        const data = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'text',
+                message: 'What would you like to do?',
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add department', 'Add a role', 'Add an employee', 'Update an employee role'],
+            },])
+    }
+}

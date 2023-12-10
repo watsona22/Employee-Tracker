@@ -1,8 +1,9 @@
--- SELECT *
--- FROM title;
--- JOIN title ON title.movie_name = title.id;
-
 SELECT
-  employee.last_name AS first, employee.last_name AS last, AS rolle.salary
+  employee.first_name,
+  employee.last_name,
+  role.title AS job_title,
+  department.dept_name,
+  role.salary
 FROM employee
-JOIN book_prices ON favorite_books.book_price = book_prices.id;
+JOIN role ON employee.role_id = role.id
+JOIN department ON role.dept_id = department.id;
