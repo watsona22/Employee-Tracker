@@ -2,7 +2,6 @@ const inquirer = require('inquirer');
 const question = data.text
 const router = require('express').Router();
 
-//view dept name and ids
 switch (data.text) {
     case 'View all departments':
         viewDept(question);
