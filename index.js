@@ -73,7 +73,6 @@ async function askHR() {
 };
 
 function viewDept() {
-
     db.query(`SELECT * FROM department`, (err, result) => {
         if (err) {
             console.log(err);
@@ -84,7 +83,6 @@ function viewDept() {
 }
 
 function viewRole() {
-
     db.query(`SELECT * FROM role`, (err, result) => {
         if (err) {
             console.log(err);
@@ -95,7 +93,6 @@ function viewRole() {
     })
 }
 function viewEmployee() {
-
     db.query(`SELECT employee.id, 
 employee.first_name, 
 employee.last_name,
@@ -116,35 +113,45 @@ role.salary,
 
 }
 function addDept() {
-    db.query(
-        {
-            dept_name: req.body.dept_name,
-        })
+    db.query(`INSERT INTO department (dept_name) 
+    VALUES (?) 
+    WHERE department_id = ?;`)
     console.table(result);
     setTimeout(askHR, 3000)
 }
 
 function addRole() {
-
-    db.query(
-        {
-            title: req.body.title,
-            salary: req.body.salary,
-            dept_name: req.body.dept_name,
-        })
+    db.query(`INSERT INTO role (title, salary, dept_id) 
+    VALUES (?, ?, ?) 
+    WHERE employee_id = ?;`, (err, result) => {
+        if (err) {
+            console.log(err);
+            console.table(result);
+            setTimeout(askHR, 3000)
+        }
+    })
     console.table(result);
     setTimeout(askHR, 3000)
 }
 function addEmployee() {
-    // get choices for roes and employees out of the database in quirer takes choices in the form of  { name:"to display", value: "to select under the hood"}
-    // use inqirer to ask about the new employee then use the answers to insert into the database
-    db.query("INSERT INTO  employee SET ?",)
-    console.table(result);
-    setTimeout(askHR, 3000)
-
+    db.query(`INSERT INTO role (title, salary, dept_id) 
+    VALUES (?, ?, ?) 
+    WHERE employee_id = ?;`, (err, result) => {
+        if (err) {
+            console.log(err);
+            console.table(result);
+            setTimeout(askHR, 3000)
+        }
+    })
 }
 function updateEmployeeRole() {
-    db.query(`SELECT * FROM employee`, (err, result) => {
+    // get choices for roles and 
+    //employees out of the database inquirer takes choices in the form of 
+    // { name: "to display", value: "to select under the hood" }
+    // use inqirer to ask about the new employee 
+    //then use the answers to insert into the database
+    db.query(`INSERT INTO employee ? WHERE employee_id`, (err, result) => {
+        "INSERT INTO employee first_name, last_name, role_id, manager_id SET ?"
         if (err) {
             console.log(err);
             console.table(result);
