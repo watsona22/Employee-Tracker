@@ -6,7 +6,7 @@ VALUES (011, "English"),
 INSERT INTO role (id, title, salary, dept_id)
 VALUES (001, 'Professor', 10.0, 011),
        (002, 'Adjunct', 7.0, 013),
-       (003, 'Professor', 12.0, 012);
+       (003, 'Tenured', 12.0, 012);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (222, "Amber", "Watson", 25, 26),
