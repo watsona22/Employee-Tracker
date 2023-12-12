@@ -93,33 +93,40 @@ function viewRole() {
     })
 }
 function viewEmployee() {
-    db.query(`SELECT employee.id, 
-employee.first_name, 
-employee.last_name,
-employee.manager_id,
-role.title,
-role.dept_id,
-role.salary,
- FROM employee
- JOIN role ON employee.role_id
- JOIN department ON role.dept_id;`, (err, result) => {
+    db.query(`SELECT
+    employee.id,
+    employee.first_name,
+    employee.last_name,
+    role.title AS job_title,
+    department.dept_name,
+    role.salary,
+    manager.first_name,
+    manager.last_name
+  FROM employee
+  JOIN role ON employee.role_id = role.id
+  JOIN department ON role.dept_id = department.id
+  JOIN manager ON employee.manager_id = manager.id;`, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(result);
+        setTimeout(askHR, 3000)
 
     })
-    if (err) {
-        console.log(err);
-    }
-    console.table(result);
-    setTimeout(askHR, 3000)
-
 }
 function addDept() {
-    db.query(`INSERT INTO department (dept_name) 
-    VALUES (?) 
-    WHERE department_id = ?;`)
-    console.table(result);
-    setTimeout(askHR, 3000)
+    db.query(`INSERT INTO department (id, dept_name) 
+    VALUES (?, ?)`, ['014', 'dept_name'], (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Your department was added!");
+        }
+        setTimeout(askHR, 3000)
+    })
 }
-
+//prompted to enter the name of the department 
+//and that department is added to the database
 function addRole() {
     db.query(`INSERT INTO role (title, salary, dept_id) 
     VALUES (?, ?, ?) 
