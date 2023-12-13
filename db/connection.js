@@ -1,4 +1,6 @@
+//use mysql package
 const mysql = require('mysql2');
+//use .env file
 require("dotenv").config()
 
 // Connect to database

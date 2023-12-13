@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
-
+//function to create initial prompt for user to indicate what they want to do
 async function askHR() {
     try {
         const data = await inquirer.prompt([
@@ -16,7 +16,7 @@ async function askHR() {
                     'Add an employee',
                     'Update an employee role'],
             },])
-
+        //switch statement to run options based on conditions
         switch (data.text) {
             case 'View all departments':
                 viewDept()
@@ -71,7 +71,7 @@ async function askHR() {
         console.log(err)
     }
 };
-
+//function to select all values from department and display. Timeout set for 3 seconds so that users can choose from initial options
 function viewDept() {
     db.query(`SELECT * FROM department`, (err, result) => {
         if (err) {
@@ -81,7 +81,7 @@ function viewDept() {
         setTimeout(askHR, 3000)
     })
 }
-
+//function to select all values from role and display
 function viewRole() {
     db.query(`SELECT * FROM role`, (err, result) => {
         if (err) {
@@ -92,6 +92,7 @@ function viewRole() {
 
     })
 }
+//function to select specified values from joined tables: employee, role, and department
 function viewEmployee() {
     db.query(`SELECT
     employee.id,
@@ -114,6 +115,7 @@ function viewEmployee() {
 
     })
 }
+//function to insert new department name
 function addDept() {
     inquirer.prompt([
         {
@@ -135,64 +137,62 @@ function addDept() {
         });
     });
 }
-async function addRole() {
-    try {
-        const data = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'roleName',
-                message: 'What is the name of the role?',
-            },
-            {
-                type: 'input',
-                name: 'roleSalary',
-                message: 'What is the salary for this role?',
-            },
-            {
-                type: 'input',
-                name: 'roleDept',
-                message: 'To what department does this role belong?',
-            },
-        ])
-        const roleObject = { data };
+//function to add new role name
+function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'roleName',
+            message: 'What is the name of the role?',
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: 'What is the salary for this role?',
+        },
+        {
+            type: 'input',
+            name: 'roleDept',
+            message: 'To what department does this role belong?',
+        },
 
+    ]).then((data) => {
+        const roleObject = data;
         db.query(`INSERT INTO role (title, salary, dept_id) 
         VALUES (?, ?, ?)`, [roleObject.roleName, roleObject.roleSalary, roleObject.roleDept], (err, result) => {
             if (err) {
                 console.log(err);
             } else {
-                console.log("Your role was added!");
-                setTimeout(askHR, 3000);
+                console.log("A new role was added!");
             }
+            setTimeout(askHR, 3000);
         });
-    } catch (error) {
-        console.log(error);
-    }
+    });
 }
-async function addEmployee() {
-    try {
-        const data = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'first',
-                message: 'What is the employee first name?',
-            },
-            {
-                type: 'input',
-                name: 'last',
-                message: 'What is the employee last name?',
-            },
-            {
-                type: 'input',
-                name: 'roleId',
-                message: 'What is the employee role ID?',
-            },
-            {
-                type: 'input',
-                name: 'managerId',
-                message: 'What is the employee manager ID?',
-            },
-        ])
+//function to add new employee and associated values
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first',
+            message: 'What is the employee first name?',
+        },
+        {
+            type: 'input',
+            name: 'last',
+            message: 'What is the employee last name?',
+        },
+        {
+            type: 'input',
+            name: 'roleId',
+            message: 'What is the employee role ID?',
+        },
+        {
+            type: 'input',
+            name: 'managerId',
+            message: 'What is the employee manager ID?',
+        },
+    ]).then((data) => {
         const newEmployeeObject = { data };
         db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) 
         VALUES (?, ?, ?, ?)`, [newEmployeeObject.first, newEmployeeObject.last, newEmployeeObject.roleId, newEmployeeObject.managerId],
@@ -201,30 +201,53 @@ async function addEmployee() {
                     console.log(err);
                 } else {
                     console.log("A new employee was added!");
-                    setTimeout(askHR, 3000);
+                }
+                setTimeout(askHR, 3000);
+            });
+    });
+};
+//function to update existing employees
+function updateEmployeeRole() {
+    function employeeList(callback) {
+        db.query('SELECT employee.id, employee.first_name, employee.last_name FROM employee',
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    callback(result);
                 }
             });
-    } catch (error) {
-        console.log(error);
     }
+    //https://github.com/SBoudrias/Inquirer.js/issues/842
+    employeeList((result) => {
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'text',
+                message: 'Which employee would you like to update?',
+                choices: result.map(employee => `${employee.first_name} ${employee.last_name}`),
+            }
+        ]).then((data) => {
+            const selectedEmployee = result.find(employee => `${employee.first_name} ${employee.last_name}` === data.text);
+            const updateEmployeeObject = { data };
+            db.query(`UPDATE employee SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? WHERE id = ?`,
+                [updateEmployeeObject.first_name, updateEmployeeObject.last_name, updateEmployeeObject.role_id, updateEmployeeObject.manager_id, selectedEmployee.id],
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("A new employee was added!");
+                    }
+                    setTimeout(askHR, 3000);
+                });
+        });
+    });
 }
 
-async function updateEmployeeRole() {
-    // get choices for roles and 
-    //employees out of the database inquirer takes choices in the form of 
-    // { name: "to display", value: "to select under the hood" }
-    // use inqirer to ask about the new employee 
-    //then use the answers to insert into the database
-    db.query(`INSERT INTO employee ? WHERE employee_id`, (err, result) => {
-        "INSERT INTO employee first_name, last_name, role_id, manager_id SET ?"
-        if (err) {
-            console.log(err);
-            console.table(result);
-            setTimeout(askHR, 3000)
-        }
-    })
-}
-
-
+// get choices for roles and 
+//employees out of the database inquirer takes choices in the form of object(below)
+// { name: "to display", value: "to select under the hood" }
+// use inqirer to ask about the new employee 
+//then use the answers to insert into the database
 askHR();
 

@@ -1,3 +1,4 @@
+-- seeded values
 INSERT INTO department (id, dept_name)
 VALUES (011, "English"),
        (012, "Chemistry"),
