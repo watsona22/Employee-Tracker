@@ -115,43 +115,101 @@ function viewEmployee() {
     })
 }
 function addDept() {
-    db.query(`INSERT INTO department (id, dept_name) 
-    VALUES (?, ?)`, ['014', 'dept_name'], (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Your department was added!");
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'deptName',
+            message: 'Enter department name',
         }
-        setTimeout(askHR, 3000)
-    })
-}
-//prompted to enter the name of the department 
-//and that department is added to the database
-function addRole() {
-    db.query(`INSERT INTO role (title, salary, dept_id) 
-    VALUES (?, ?, ?) 
-    WHERE employee_id = ?;`, (err, result) => {
-        if (err) {
-            console.log(err);
-            console.table(result);
+
+    ]).then((answer) => {
+        const userInput = answer.deptName;
+        db.query(`INSERT INTO department (dept_name) 
+    VALUES (?)`, [userInput], (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Your department was added!");
+            }
             setTimeout(askHR, 3000)
-        }
-    })
-    console.table(result);
-    setTimeout(askHR, 3000)
+        });
+    });
 }
-function addEmployee() {
-    db.query(`INSERT INTO role (title, salary, dept_id) 
-    VALUES (?, ?, ?) 
-    WHERE employee_id = ?;`, (err, result) => {
-        if (err) {
-            console.log(err);
-            console.table(result);
-            setTimeout(askHR, 3000)
-        }
-    })
+async function addRole() {
+    try {
+        const data = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'roleName',
+                message: 'What is the name of the role?',
+            },
+            {
+                type: 'input',
+                name: 'roleSalary',
+                message: 'What is the salary for this role?',
+            },
+            {
+                type: 'input',
+                name: 'roleDept',
+                message: 'To what department does this role belong?',
+            },
+        ])
+        const roleObject = { data };
+
+        db.query(`INSERT INTO role (title, salary, dept_id) 
+        VALUES (?, ?, ?)`, [roleObject.roleName, roleObject.roleSalary, roleObject.roleDept], (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Your role was added!");
+                setTimeout(askHR, 3000);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
-function updateEmployeeRole() {
+async function addEmployee() {
+    try {
+        const data = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'first',
+                message: 'What is the employee first name?',
+            },
+            {
+                type: 'input',
+                name: 'last',
+                message: 'What is the employee last name?',
+            },
+            {
+                type: 'input',
+                name: 'roleId',
+                message: 'What is the employee role ID?',
+            },
+            {
+                type: 'input',
+                name: 'managerId',
+                message: 'What is the employee manager ID?',
+            },
+        ])
+        const newEmployeeObject = { data };
+        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+        VALUES (?, ?, ?, ?)`, [newEmployeeObject.first, newEmployeeObject.last, newEmployeeObject.roleId, newEmployeeObject.managerId],
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("A new employee was added!");
+                    setTimeout(askHR, 3000);
+                }
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateEmployeeRole() {
     // get choices for roles and 
     //employees out of the database inquirer takes choices in the form of 
     // { name: "to display", value: "to select under the hood" }
