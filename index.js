@@ -80,7 +80,7 @@ function viewDept() {
         console.table(result);
         setTimeout(askHR, 3000)
     })
-}
+};
 //function to select all values from role and display
 function viewRole() {
     db.query(`SELECT * FROM role`, (err, result) => {
@@ -89,9 +89,8 @@ function viewRole() {
         }
         console.table(result);
         setTimeout(askHR, 3000)
-
     })
-}
+};
 //function to select specified values from joined tables: employee, role, and department
 function viewEmployee() {
     db.query(`SELECT
@@ -112,9 +111,8 @@ function viewEmployee() {
         }
         console.table(result);
         setTimeout(askHR, 3000)
-
     })
-}
+};
 //function to insert new department name
 function addDept() {
     inquirer.prompt([
@@ -136,7 +134,7 @@ function addDept() {
             setTimeout(askHR, 3000)
         });
     });
-}
+};
 //function to add new role name
 function addRole() {
     inquirer.prompt([
@@ -168,7 +166,7 @@ function addRole() {
             setTimeout(askHR, 3000);
         });
     });
-}
+};
 //function to add new employee and associated values
 function addEmployee() {
     inquirer.prompt([
@@ -228,6 +226,8 @@ function updateEmployeeRole() {
                 choices: result.map(employee => `${employee.first_name} ${employee.last_name}`),
             }
         ]).then((data) => {
+            //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+            //uses the find method on the result array to recall the employee first and last name from the data object
             const selectedEmployee = result.find(employee => `${employee.first_name} ${employee.last_name}` === data.text);
             const updateEmployeeObject = { data };
             db.query(`UPDATE employee SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? WHERE id = ?`,
@@ -242,12 +242,6 @@ function updateEmployeeRole() {
                 });
         });
     });
-}
-
-// get choices for roles and 
-//employees out of the database inquirer takes choices in the form of object(below)
-// { name: "to display", value: "to select under the hood" }
-// use inqirer to ask about the new employee 
-//then use the answers to insert into the database
+};
 askHR();
 
