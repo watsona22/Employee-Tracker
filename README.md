@@ -1,8 +1,12 @@
 # Employee-Tracker
-The purpose of this challenge was to create a command-line application in node using the mysql package. This program was designed to allow users to interact with a content management system containing a company employee database. The application uses Inquirer and SQL to prompt the user and query the database for information. The project demonstrated the use of node to create a program written in Javascript. 
+
+## Description
+This program was designed to allow users to interact with a content management system containing a company employee database. The application uses Inquirer and SQL to prompt the user and query the database for information. The project demonstrated the use of node to create a program written in Javascript. 
 
 The acceptance criteria were as follows: 
 
+## Acceptance Criteria
+```
 GIVEN a command-line application that accepts user input
 WHEN I start the application
 THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
@@ -21,16 +25,13 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 As the image illustrates, your schema should contain the following three tables:
-
+```
 
 This challenge utilized the node environment to create a program using dynamic Javascript. There were helpful error messages in the terminal to direct progress. The MySQL documentation was referenced throughout the project. I organized files by category. There were however, quite a few hurdles when building the queries. The first related to scope. There are nested functions that do not respond as expected depending on where they reside in relation to one another.  Furthermore, I realized how important it is to know the components of SQL (connectors, imports, and the like) to make the application workable. With practice, this should be become second nature. The recurring issue of needing to organize code so that it can be read and debugged is vitally important. Previous eureka moments were just as valuable here - reformatting code, implementing clear naming convention, and notating often.  I am still working to make this a natural part of the build process. 
 
 ## Usage
 
 The js file can be used to understand the dynamic code that supports the application. A link to the mockup is listed below, for your convenience. ![App Mockup](./assets/employee-tracker-mockup.png)
-
-## Credits
-The project was completed with help from the course materials and assistance from Bootcamp tutor, Erik Hirsch.
 
 ## License
 
